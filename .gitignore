@@ -1,0 +1,32 @@
+[Bb]in/
+build/
+[Rr]elease/
+[Dd]ebug/
+cmake-build-debug/
+
+#Linux
+*.o
+*.so
+*~
+*.swp
+__*/
+.idea/
+
+#Visual Studio
+*.sdf
+*.opensdf
+*.suo
+*.psess
+*.vsp
+*.user
+
+#Merge files
+*.orig
+
+#archives
+*.rar
+*.zip
+*.tar.gz
+
+#MacOS
+.DS_Store
