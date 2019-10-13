@@ -11,6 +11,7 @@ EXPORT(int) OnPluginGetApiVersion()
 EXPORT(void) OnPluginCreateInterface(Onset::IBaseInterface *PluginInterface)
 {
     Onset::Plugin::Init(PluginInterface);
+    Onset::IServerPlugin::
 }
 
 EXPORT(int) OnPluginStart()

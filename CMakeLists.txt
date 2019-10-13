@@ -14,6 +14,6 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(HORIZONSDK_ROOT_DIR "${PROJECT_SOURCE_DIR}/libs/sdk")
 find_package(HorizonPluginSDK REQUIRED)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(src)

@@ -14,7 +14,7 @@ target_include_directories(onsetJavaJNI PRIVATE
         ${JNI_INCLUDE_DIRS}
         )
 
-set_property(TARGET onsetJavaJNI PROPERTY CXX_STANDARD 11)
+set_property(TARGET onsetJavaJNI PROPERTY CXX_STANDARD 17)
 set_property(TARGET onsetJavaJNI PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET onsetJavaJNI PROPERTY PREFIX "")
 
