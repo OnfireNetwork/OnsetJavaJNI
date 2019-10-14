@@ -3,6 +3,8 @@
 #include <string>
 #include <jni.h>
 
+#define UNUSED(x) (void) x;
+
 #ifdef LUA_DEFINE
 # undef LUA_DEFINE
 #endif
@@ -35,8 +37,10 @@ Plugin::Plugin()
     env->CallVoidMethod(out, mid, str);
 }
 
-JNIEXPORT void JNICALL Java_LuaAccess_callVoid(JNIEnv *env, jobject obj, jstring string) {
-    
+JNIEXPORT void JNICALL Java_LuaAccess_callAction(JNIEnv *env, jobject obj, jstring json) {
+    UNUSED(env);
+    UNUSED(obj);
+    UNUSED(json);
 }
 
 Plugin::~Plugin()
