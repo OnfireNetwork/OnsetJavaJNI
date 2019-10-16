@@ -1,4 +1,4 @@
-add_library(onsetJavaJNI MODULE
+add_library(onsetJavaJNI SHARED
         PluginInterface.cpp
         Singleton.h
         Plugin.h

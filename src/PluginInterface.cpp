@@ -11,36 +11,40 @@ EXPORT(int) OnPluginGetApiVersion()
 EXPORT(void) OnPluginCreateInterface(Onset::IBaseInterface *PluginInterface)
 {
     Onset::Plugin::Init(PluginInterface);
-    Onset::IServerPlugin::
 }
 
 EXPORT(int) OnPluginStart()
 {
-    // initialize plugin singleton
     Plugin::Get();
-
     return PLUGIN_API_VERSION;
 }
 
 EXPORT(void) OnPluginStop()
 {
     Plugin::Singleton::Destroy();
-
     Onset::Plugin::Destroy();
 }
 
 EXPORT(void) OnPluginTick(float DeltaSeconds)
 {
-    (void)DeltaSeconds; // unused
+    (void) DeltaSeconds;
+    Plugin::Get()->tick();
 }
 
 EXPORT(void) OnPackageLoad(const char *PackageName, lua_State *L)
 {
-    (void)PackageName; // unused
-    (void) L;
+    auto pn = new std::string(PackageName);
+    if(*pn == "java"){
+        for (auto const &f : Plugin::Get()->GetFunctions())
+            Lua::RegisterPluginFunction(L, std::get<0>(f), std::get<1>(f));
+        Plugin::Get()->startPackage(L);
+    }
 }
 
 EXPORT(void) OnPackageUnload(const char *PackageName)
 {
-    (void)PackageName; // unused
+    auto pn = new std::string(PackageName);
+    if(*pn == "java"){
+        Plugin::Get()->stopPackage();
+    }
 }

@@ -16,8 +16,15 @@ class Plugin : public Singleton<Plugin>
 private:
     JavaVM *jvm;
     JNIEnv *env;
+    jclass adapterClass;
+    jmethodID adapterWriteMethod;
+    jmethodID adapterReadMethod;
+    jmethodID adapterReadyMethod;
+    bool attached = false;
     Plugin();
     ~Plugin();
+public:
+    lua_State *luaState;
 
 private:
     using FuncInfo_t = std::tuple<const char *, lua_CFunction>;
@@ -34,5 +41,10 @@ public:
     {
         return _func_list;
     }
+
+public:
+    void startPackage(lua_State *lua);
+    void stopPackage();
+    void tick();
 
 };
