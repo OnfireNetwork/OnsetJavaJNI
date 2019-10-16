@@ -17,10 +17,8 @@ private:
     JavaVM *jvm;
     JNIEnv *env;
     jclass adapterClass;
-    jmethodID adapterWriteMethod;
-    jmethodID adapterReadMethod;
+    jmethodID adapterActionMethod;
     jmethodID adapterReadyMethod;
-    bool attached = false;
     Plugin();
     ~Plugin();
 public:
@@ -48,3 +46,5 @@ public:
     void tick();
 
 };
+
+extern "C" JNIEXPORT void JNICALL Java_callAction (JNIEnv *, jclass, jstring);

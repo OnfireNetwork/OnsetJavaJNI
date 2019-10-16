@@ -35,7 +35,7 @@ Plugin::Plugin() {
         Lua::ParseArguments(L, json);
         jstring str = Plugin::Get()->env->NewStringUTF(json.c_str());
         UNUSED(str)
-        Plugin::Get()->env->CallStaticVoidMethod(Plugin::Get()->adapterClass, Plugin::Get()->adapterWriteMethod, str);
+        Plugin::Get()->env->CallStaticVoidMethod(Plugin::Get()->adapterClass, Plugin::Get()->adapterActionMethod, str);
         return 1;
     });
     LUA_DEFINE(CallJavaReady) {
@@ -60,28 +60,31 @@ void Plugin::startPackage(lua_State *lua){
     vm_args.options = options;
     vm_args.ignoreUnrecognized = false;
     JNI_CreateJavaVM(&jvm, (void**)&env, &vm_args);
-    adapterClass = env->FindClass("LuaAdapter");
-    adapterWriteMethod = env->GetStaticMethodID(adapterClass, "lua_write_line", "(Ljava/lang/String;)V");
-    adapterReadyMethod = env->GetStaticMethodID(adapterClass, "lua_ready", "()V");
-    adapterReadMethod = env->GetStaticMethodID(adapterClass, "lua_read_line", "()Ljava.lang.String;");
+    adapterClass = env->FindClass("net/onfirenetwork/onsetjava/jni/LuaAdapter");
+    JNINativeMethod methods[] = {
+            {(char*) "callAction", (char*) "(Ljava/lang/String;)V", (void*)Java_callAction },
+    };
+    env->RegisterNatives(adapterClass, methods, 1);
+    adapterActionMethod = env->GetStaticMethodID(adapterClass, "onAction", "(Ljava/lang/String;)V");
+    adapterReadyMethod = env->GetStaticMethodID(adapterClass, "onReady", "()V");
+    jclass mainClass = env->FindClass("net/onfirenetwork/onsetjava/jni/OnsetJavaJNI");
+    jmethodID mainMethod = env->GetStaticMethodID(mainClass, "main", "()V");
+    env->CallStaticVoidMethod(mainClass, mainMethod);
 }
 
 void Plugin::tick(){
-    if(luaState != nullptr){
-        while (true){
-            jobject line = env->CallStaticObjectMethod(adapterClass, adapterReadMethod); // THIS CURRENTLY PRODUCES A SEGFAULT FOR SOME REASON IDK
-            if(line == nullptr){
-                break;
-            }
-            Lua::LuaArgs_t args;
-            args.push_back(new Lua::LuaValue("OnJavaAction"));
-            const char *json = (*env).GetStringUTFChars((jstring) line, nullptr);
-            args.push_back(new Lua::LuaValue(json));
-            CallLuaFunction(luaState, "CallEvent", &args);
-        }
-    }
+
 }
 
 void Plugin::stopPackage(){
     jvm->DestroyJavaVM();
+}
+
+void Java_callAction(JNIEnv *env, jclass jcl, jstring javaLine){
+    UNUSED(jcl)
+    auto args = new Lua::LuaArgs_t();
+    const char *json = (*env).GetStringUTFChars(javaLine, nullptr);
+    Lua::LuaValue value = new Lua::LuaValue(json);
+    args->push_back(value);
+    Onset::Plugin::Get()->CallEvent("OnJavaAction", args);
 }
