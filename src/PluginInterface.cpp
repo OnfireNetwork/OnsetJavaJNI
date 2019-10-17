@@ -28,7 +28,6 @@ EXPORT(void) OnPluginStop()
 EXPORT(void) OnPluginTick(float DeltaSeconds)
 {
     (void) DeltaSeconds;
-    Plugin::Get()->tick();
 }
 
 EXPORT(void) OnPackageLoad(const char *PackageName, lua_State *L)

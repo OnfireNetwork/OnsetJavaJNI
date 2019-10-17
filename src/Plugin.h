@@ -43,7 +43,6 @@ public:
 public:
     void startPackage(lua_State *lua);
     void stopPackage();
-    void tick();
 
 };
 

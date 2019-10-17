@@ -72,10 +72,6 @@ void Plugin::startPackage(lua_State *lua){
     env->CallStaticVoidMethod(mainClass, mainMethod);
 }
 
-void Plugin::tick(){
-
-}
-
 void Plugin::stopPackage(){
     jvm->DestroyJavaVM();
 }
@@ -84,7 +80,6 @@ void Java_callAction(JNIEnv *env, jclass jcl, jstring javaLine){
     UNUSED(jcl)
     auto args = new Lua::LuaArgs_t();
     const char *json = (*env).GetStringUTFChars(javaLine, nullptr);
-    Lua::LuaValue value = new Lua::LuaValue(json);
-    args->push_back(value);
+    args->push_back(json);
     Onset::Plugin::Get()->CallEvent("OnJavaAction", args);
 }
